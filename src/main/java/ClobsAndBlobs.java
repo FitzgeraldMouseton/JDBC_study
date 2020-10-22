@@ -1,4 +1,6 @@
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -21,28 +23,27 @@ public class ClobsAndBlobs {
             // Запись и чтение большого текста
             String writeTextQuery = "update posts set full_text = ? where id = 1";
             String readTextQuery = "select full_text from posts where id = 1";
-            File file = new File("books/for whom the bell tolls.txt");
+            Path path = Path.of("books/for whom the bell tolls.txt");
             try (PreparedStatement writeStatement = connection.prepareStatement(writeTextQuery);
                  PreparedStatement readStatement = connection.prepareStatement(readTextQuery);
-                 FileReader reader = new FileReader(file);) {
+                 BufferedReader reader = Files.newBufferedReader(path);) {
 
                 // write
-//                writeStatement.setCharacterStream(1, reader);
-//                writeStatement.executeUpdate();
+                writeStatement.setCharacterStream(1, reader);
+                writeStatement.executeUpdate();
 
                 // read
-//                try (final ResultSet resultSet = readStatement.executeQuery();) {
-//                    while (resultSet.next()) {
-//                        final Reader characterStream = resultSet.getCharacterStream(1);
-//                        final BufferedReader bufferedReader = new BufferedReader(characterStream);
-//                        String line;
-//                        while ((line = bufferedReader.readLine()) != null) {
-//                            System.out.println(line);
-//                        }
-//                        bufferedReader.close();
-//                        characterStream.close();
-//                    }
-//                }
+                try (final ResultSet resultSet = readStatement.executeQuery();) {
+                    while (resultSet.next()) {
+                        try (final Reader characterStream = resultSet.getCharacterStream(1);
+                        final BufferedReader bufferedReader = new BufferedReader(characterStream);) {
+                            String line;
+                            while ((line = bufferedReader.readLine()) != null) {
+                                System.out.println(line);
+                            }
+                        }
+                    }
+                }
             }
 
             // BLOB

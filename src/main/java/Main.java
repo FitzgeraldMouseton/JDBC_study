@@ -1,7 +1,3 @@
-import com.mysql.cj.Session;
-
-import javax.sql.RowSet;
-import javax.sql.rowset.CachedRowSet;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -67,7 +63,7 @@ public class Main {
             Главное отличие PreparedStatement от Statement заключается в следующем. При отправке запроса к БД,
             БД сначала парсит запрос, затем составляет план оптимального выполнения этого запроса и, наконец, выполняет его.
             При использовании PreparedStatement этот план сохраняется для последующего использования, что ускоряет дело,
-            если мы часто импользуем один и тот же запрос. Как правило нет причин использовать Statement.
+            если мы часто используем один и тот же запрос. Как правило нет причин использовать Statement.
              */
 
             printAllWithTitleLengthBetween(connection, 5, 15);
@@ -154,7 +150,7 @@ public class Main {
                 System.out.println("Last: " + title);
             }
 
-            // Запись под определеннм номером
+            // Запись под определенным номером
             if (resultSet.absolute(2)) {
                 String title = resultSet.getString("title");
                 System.out.println("Row 2: " + title);
